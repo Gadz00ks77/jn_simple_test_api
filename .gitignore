@@ -1,0 +1,4 @@
+.vscode
+ingestion-api-app/.aws-sam
+venv
+ingestion-api-app/samconfig.toml

@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ingestion-api
+Globals:
+  Function:
+    Timeout: 120
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+
+Resources:
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: conv-ingestion-api-log
+
+  ingest:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ingest-simple/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Environment:
+        Variables:
+          S3ERRORS: conv-ingestion-api-log
+      Role: arn:aws:iam::266995720231:role/whom-role
+      MemorySize: 128
+      Events:
+        ingest:
+          Type: Api
+          Properties: 
+            Path: /ingest/simple/{type}
+            Method: get
+            # Auth:
+            #   ApiKeyRequired: true
